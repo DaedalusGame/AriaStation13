@@ -2236,6 +2236,34 @@ window "supplywindow"
 		macro = ""
 		menu = ""
 		on-close = ""
+	elem "buttonDesc"
+		type = BUTTON
+		pos = 224,392
+		size = 192x40
+		anchor1 = 35,82
+		anchor2 = 65,90
+		font-family = ""
+		font-size = 0
+		font-style = ""
+		text-color = #000000
+		background-color = none
+		is-visible = true
+		is-disabled = false
+		is-transparent = false
+		is-default = false
+		border = none
+		drop-zone = false
+		right-click = false
+		saved-params = "is-checked"
+		on-size = ""
+		text = "Update Description"
+		image = ""
+		command = "skincmd \"supplycomp;desc\""
+		is-flat = false
+		stretch = false
+		is-checked = false
+		group = ""
+		button-type = pushbutton
 	elem "labelMoney"
 		type = LABEL
 		pos = 224,40
@@ -2377,9 +2405,9 @@ window "supplywindow"
 	elem "inputManifest"
 		type = INPUT
 		pos = 224,264
-		size = 192x160
+		size = 192x120
 		anchor1 = 35,55
-		anchor2 = 65,88
+		anchor2 = 65,80
 		font-family = ""
 		font-size = 0
 		font-style = ""
