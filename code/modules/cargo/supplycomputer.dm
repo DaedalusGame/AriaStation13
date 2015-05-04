@@ -1,6 +1,7 @@
 /obj/fakeitem
 	name = "Fake Item"
 	desc = ""
+	var/basename = ""
 	var/obj/skincmdtarget
 	var/clickaction
 	var/dblclkaction
@@ -16,6 +17,7 @@
 		var/obj/fakeitem/C = new()
 
 		C.name = name
+		C.basename = basename
 		C.desc = desc
 		C.icon = icon
 		C.icon_state = icon_state
@@ -87,6 +89,7 @@
 			var/price = good.get_buy_price()
 
 			FO.name = "[good.name] ([price]$)"
+			FO.basename = good.name
 			FO.icon = good.get_icon()
 			FO.icon_state = good.get_iconstate()
 			FO.color = good.get_iconcolor()
@@ -194,7 +197,7 @@
 
 				user << output(O, "supplywindow.gridContent:[count]")
 
-			current_crate.name = "[current_crate.data:name] ([totalcost]$)"
+			current_crate.name = "[current_crate.basename] ([totalcost]$)"
 
 		winset(user, "supplywindow.gridContent", "cells=\"[count]\"")
 
@@ -220,7 +223,12 @@
 		if(cost - internalcard.money > 0)
 			budgetcolor = rgb(255,0,0)
 
-		winset(user,"supplywindow.labelMoney","text-color=[budgetcolor];text=\"Budget: [budget]$\"")
+		var/budgetstring = "[budget]$"
+
+		if(cost)
+			budgetstring += " -[cost]$"
+
+		winset(user,"supplywindow.labelMoney","text-color=[budgetcolor];text=\"Budget: [budgetstring]\"")
 
 		return
 
@@ -351,7 +359,7 @@
 		var/crate_desc = winget(user,"supplywindow.inputManifest","text")
 
 		if(O)
-			O.name = crate_name
+			O.basename = crate_name
 			O.desc = crate_desc
 
 	proc/read_crate_description(var/i,var/mob/user)
@@ -360,7 +368,7 @@
 		var/obj/fakeitem/O = containers[i]
 
 		if(O)
-			winset(user,"supplywindow.inputCrateName","text=[O.name]")
+			winset(user,"supplywindow.inputCrateName","text=[O.basename]")
 			winset(user,"supplywindow.inputManifest","text=[O.desc]")
 
 	SkinCmd(mob/user as mob, var/data as text)
@@ -455,7 +463,7 @@
 		//var/datum/assemblerprint/R = SP.recipe
 
 		var/atom/movable/A = SP.order()
-		A.name = "[FO.name]"
+		A.name = "[FO.basename]"
 		if(lentext(FO.desc))
 			A.name += " ([FO.desc])"
 		A.loc = pickedloc
