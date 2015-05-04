@@ -47,6 +47,8 @@
 		projtwo.xo = projtwo.original.x - projtwo.starting.x
 		spawn()
 			playsound(src, fire_sound, 50, 1)
+			projone.fired()
+			projtwo.fired()
 			//projone.dumbfire(my_atom.dir)
 			//projtwo.dumbfire(my_atom.dir)
 		sleep(2)
@@ -84,15 +86,24 @@
 	name = "\improper taser system"
 	desc = "A weak taser system for space pods, fires electrodes that shock upon impact."
 	icon_state = "pod_taser"
-	projectile_type = "/obj/item/projectile/beam/disabler"
+	projectile_type = "/obj/item/projectile/energy/electrode"
 	shot_cost = 250
 	fire_sound = "sound/weapons/Taser.ogg"
+
+/obj/item/device/spacepod_equipment/weaponry/tesla
+	name = "\improper tesla beam system"
+	desc = "A powerful teslacoil beam system for space pods."
+	icon_state = "pod_b_taser"
+	projectile_type = "/obj/item/projectile/beam/thunder"
+	shot_cost = 1000
+	fire_sound = "sound/effects/stealthoff.ogg"
+	fire_delay = 60
 
 /obj/item/device/spacepod_equipment/weaponry/burst_taser
 	name = "\improper burst taser system"
 	desc = "A weak taser system for space pods, this one fires 3 at a time."
 	icon_state = "pod_b_taser"
-	projectile_type = "/obj/item/projectile/beam/disabler"
+	projectile_type = "/obj/item/projectile/energy/electrode"
 	shot_cost = 350
 	shots_per = 3
 	fire_sound = "sound/weapons/Taser.ogg"

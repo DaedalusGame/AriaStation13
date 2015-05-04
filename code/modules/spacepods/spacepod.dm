@@ -20,7 +20,7 @@ var/global/list/spacepods_list = list()
 	var/obj/item/weapon/cell/super/battery
 	var/datum/gas_mixture/cabin_air
 	var/obj/machinery/portable_atmospherics/canister/internal_tank
-	var/datum/effect/effect/system/ion_trail_follow/ion_trail
+	var/datum/effect/effect/system/ion_trail_follow/space_trail/ion_trail
 	var/use_internal_tank = 0
 	var/datum/global_iterator/pr_int_temp_processor //normalizes internal air mixture temperature
 	var/datum/global_iterator/pr_give_air //moves air from tank to cabin
