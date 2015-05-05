@@ -908,11 +908,11 @@ obj/spacepod/verb/toggleLights()
 
 	if(dx > dy)
 		if(speedx > 80)
-			deal_damage(speedx / 10)
+			deal_damage(speedx / 5)
 		speedx *= 0.8
 	else if(dx < dy)
 		if(speedy > 80)
-			deal_damage(speedy / 10)
+			deal_damage(speedy / 5)
 		speedy *= 0.8
 
 	if(speed > 120)
@@ -970,6 +970,28 @@ obj/spacepod/verb/toggleLights()
 		if(istype(src.loc, /turf/space))
 			inertia_dir = direction
 
+		var/speed = max(abs(speedx),abs(speedy))
+
+		for(var/turf/T in locs)
+			var/frict = get_turf_friction(T)
+			var/frictmulti = 1 - frict
+
+			var/force = speed * frict
+
+			if(force > 60)
+				deal_damage(force / 5)
+
+			if(force > 120)
+				T.ex_act(1)
+			else if(force > 90)
+				T.ex_act(2)
+			else if(force > 60)
+				if(prob(66))
+					T.ex_act(2)
+
+			speedx *= frictmulti
+			speedy *= frictmulti
+
 /obj/spacepod/proc/accelerate(xacc,yacc)
 	speedx += xacc
 	speedy += yacc
@@ -981,6 +1003,16 @@ obj/spacepod/verb/toggleLights()
 
 	speedx = max(-maxspeed,min(maxspeed,speedx))
 	speedy = max(-maxspeed,min(maxspeed,speedy))
+
+/obj/spacepod/proc/get_turf_friction(var/turf/T)
+	if(istype(T,/turf/simulated/floor/plating))
+		return 0.0
+	else if(istype(T,/turf/simulated/floor/engine))
+		return 0.0
+	else if(istype(T,/turf/simulated/floor))
+		return 0.2
+
+	return 0.0
 
 /obj/spacepod/proc/handlerelaymove(mob/user, direction)
 	//var/moveship = 1

@@ -118,6 +118,61 @@
 	fire_sound = 'sound/weapons/Laser.ogg'
 	fire_delay = 30
 
+//TODO: all of these
+/obj/item/device/spacepod_equipment/weaponry/shockcoil
+	name = "\improper tesla beam system"
+	desc = "A powerful teslacoil beam system for space pods."
+	icon_state = "pod_b_taser"
+	projectile_type = "/obj/item/projectile/beam/thunder"
+	shot_cost = 1000
+	fire_sound = "sound/effects/stealthoff.ogg"
+	fire_delay = 60
+
+/obj/item/device/spacepod_equipment/weaponry/magmaul
+	name = "\improper tesla beam system"
+	desc = "A powerful teslacoil beam system for space pods."
+	icon_state = "pod_b_taser"
+	projectile_type = "/obj/item/projectile/beam/thunder"
+	shot_cost = 1000
+	fire_sound = "sound/effects/stealthoff.ogg"
+	fire_delay = 60
+
+/obj/item/device/spacepod_equipment/weaponry/battlehammer
+	name = "\improper tesla beam system"
+	desc = "A powerful teslacoil beam system for space pods."
+	icon_state = "pod_b_taser"
+	projectile_type = "/obj/item/projectile/beam/thunder"
+	shot_cost = 1000
+	fire_sound = "sound/effects/stealthoff.ogg"
+	fire_delay = 60
+
+/obj/item/device/spacepod_equipment/weaponry/voltdriver
+	name = "\improper tesla beam system"
+	desc = "A powerful teslacoil beam system for space pods."
+	icon_state = "pod_b_taser"
+	projectile_type = "/obj/item/projectile/beam/thunder"
+	shot_cost = 1000
+	fire_sound = "sound/effects/stealthoff.ogg"
+	fire_delay = 60
+
+/obj/item/device/spacepod_equipment/weaponry/judicator
+	name = "\improper tesla beam system"
+	desc = "A powerful teslacoil beam system for space pods."
+	icon_state = "pod_b_taser"
+	projectile_type = "/obj/item/projectile/beam/thunder"
+	shot_cost = 1000
+	fire_sound = "sound/effects/stealthoff.ogg"
+	fire_delay = 60
+
+/obj/item/device/spacepod_equipment/weaponry/imperialist
+	name = "\improper tesla beam system"
+	desc = "A powerful teslacoil beam system for space pods."
+	icon_state = "pod_b_taser"
+	projectile_type = "/obj/item/projectile/beam/thunder"
+	shot_cost = 1000
+	fire_sound = "sound/effects/stealthoff.ogg"
+	fire_delay = 60
+
 //base item for spacepod misc equipment (tracker)
 /obj/item/device/spacepod_equipment/misc
 	name = "pod misc"

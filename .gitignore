@@ -1,3 +1,9 @@
 config
 statistics
 data
+*.bak
+*.dmb
+*.rsc
+*.lk
+info.json
+objtree.txt

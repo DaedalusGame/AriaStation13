@@ -1,12 +1,12 @@
 // BEGIN_INTERNALS
 /*
 MAP_ICON_TYPE: 0
-WINDOW: code\modules\spacepods\spacepod.dm;code\modules\projectiles\projectile\thunder.dm;code\defines\procs\helpers.dm;code\unused\scrap.dm;code\WorkInProgress\SkyMarshal\traitoritems.dm;code\modules\misc\minimap.dm;code\WorkInProgress\virus2\base.dm
+WINDOW: code\modules\cyberspace\actions.dm;icons\mob\screen_network.dmi;code\modules\cyberspace\programs.dm;icons\obj\network.dmi;code\modules\cyberspace\cyberspace.dm;maps\revostation.0.8.dmm;code\defines\procs\AStar.dm;icons\effects\effects.dmi
 LAST_COMPILE_VERSION: 504.1234
 UPDATE_OBJ_TREE: ON
-DIR: code code\ATMOSPHERICS\components code\ATMOSPHERICS\components\binary_devices code\ATMOSPHERICS\components\unary code\datums\helper_datums code\defines code\defines\mob\dead code\defines\mob\living code\defines\mob\living\carbon code\defines\mob\living\silicon code\defines\procs code\game\asteroid code\game\machinery code\game\machinery\bots code\game\machinery\computer code\game\objects code\game\objects\devices\PDA code\game\objects\items code\game\objects\tanks code\modules code\modules\misc code\modules\misc\fnaf code\modules\mob\dead\observer code\modules\mob\living\silicon\ai code\modules\mob\living\silicon\robot code\modules\projectiles code\modules\projectiles\projectile code\modules\research\telescience code\modules\spacepods code\unused code\WorkInProgress code\WorkInProgress\Cael_Aislinn\Rust code\WorkInProgress\Cael_Aislinn\Tajara code\WorkInProgress\Mini code\WorkInProgress\SkyMarshal code\WorkInProgress\virus2 icons icons\48x48 icons\mob icons\obj icons\obj\clothing icons\pods interface maps sound\ambience sound\effects sound\mecha sound\weapons 
-FILE: code\modules\spacepods\spacepod.dm
-LAST_COMPILE_TIME: 1430691176
+DIR: code code\ATMOSPHERICS\components code\ATMOSPHERICS\components\binary_devices code\ATMOSPHERICS\components\unary code\defines code\defines\mob\dead code\defines\mob\living code\defines\mob\living\carbon code\defines\procs code\defines\sd_procs code\game\machinery code\game\objects code\game\objects\items code\game\objects\storage code\modules code\modules\cargo code\modules\crafting code\modules\cyberspace code\modules\food code\modules\misc code\modules\mob\living\silicon code\modules\mob\living\silicon\ai code\modules\network code\modules\projectiles\projectile code\modules\spacepods code\WorkInProgress\SkyMarshal code\WorkInProgress\virus2 icons icons\effects icons\mecha icons\mob icons\obj icons\turf interface maps sound 
+FILE: code\modules\cyberspace\actions.dm
+LAST_COMPILE_TIME: 1430833616
 AUTO_FILE_DIR: ON
 */
 // END_INTERNALS
