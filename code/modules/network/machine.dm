@@ -20,7 +20,7 @@
 	var/netid = "00000000"
 	var/nettype = "UNKNOWN"
 
-	var/obj/machinery/master = null
+	var/atom/master = null
 
 	//process()
 		//if(netid == "00000000")
@@ -108,6 +108,19 @@
 	spawn(2)
 		power_change()
 
+/obj/machinery/commarray/process()
+	if(stat & (BROKEN))
+		return
+	if(!nterm)
+		for (var/obj/machinery/power/netterm/term in loc)
+			netconnect(term)
+			break
+	else
+		if(nterm.netid == "00000000")
+			nterm.requestid()
+		else
+			nterm.nettype = "COMMARRAY"
+
 /obj/machinery/computer/process()
 	if(stat & (BROKEN))
 		return
@@ -118,20 +131,67 @@
 	else
 		if(nterm.netid == "00000000")
 			nterm.requestid()
+		else
+			nterm.nettype = "CONSOLE"
 
-/obj/machinery
-	//var/net_connected = 0
-	//var/net_netid
-	var/obj/machinery/power/netterm/nterm
-
+/atom
 	proc/netconnect(obj/machinery/power/netterm/term)
-		nterm = term
-		nterm.master = src
+		if(!term || term.master) return
+
+		set_netterm(term)
+		term.master = src
 
 	proc/netsend(datum/netpacket/p)
+		var/obj/machinery/power/netterm/nterm = get_netterm()
+
 		if(!nterm)
 			return
 
 		nterm.send(p)
 
 	proc/netreceive(datum/packet/p)
+		return
+
+	proc/get_netterm()
+		return null
+
+	proc/set_netterm(var/obj/machinery/power/netterm/term)
+		return
+
+/obj/machinery
+	//var/net_connected = 0
+	//var/net_netid
+	var/obj/machinery/power/netterm/nterm
+
+	get_netterm()
+		return nterm
+
+	set_netterm(var/obj/machinery/power/netterm/term)
+		nterm = term
+
+/mob/living/silicon/ai
+	//var/net_connected = 0
+	//var/net_netid
+	var/obj/machinery/power/netterm/nterm
+
+	Life() //Try and stop me
+		..()
+
+		if (src.stat == 2)
+			return
+
+		if(!nterm)
+			for (var/obj/machinery/power/netterm/term in loc)
+				netconnect(term)
+				break
+		else
+			if(nterm.netid == "00000000")
+				nterm.requestid()
+			else
+				nterm.nettype = "NEURALCOMP"
+
+	get_netterm()
+		return nterm
+
+	set_netterm(var/obj/machinery/power/netterm/term)
+		nterm = term

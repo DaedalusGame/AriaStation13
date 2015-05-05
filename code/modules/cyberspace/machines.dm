@@ -26,6 +26,17 @@
 
 		return cyber_mapobj
 
+/mob/living/silicon/ai
+	var/list/cyber_baseprograms = list(/obj/effect/cyberspace/program/boss)
+	var/cyber_mapsize = 9 //minimum size until better ui code
+	var/obj/effect/cyberspace/mapholder/cyber_mapobj
+
+	get_cybermap(var/level)
+		if(!cyber_mapobj)
+			cyber_mapobj = make_cybermap(cyber_mapsize,cyber_mapsize,cyber_baseprograms)
+
+		return cyber_mapobj
+
 /obj/machinery/power/netterm/get_cybermap(var/level)
 	if(master)
 		return master.get_cybermap(level)
