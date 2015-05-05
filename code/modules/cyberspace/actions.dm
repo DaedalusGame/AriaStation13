@@ -6,6 +6,10 @@ datum/cyberaction
 
 	var/sizereq = 1		//How many sectors are required on user
 	var/cost = 0		//How many sectors are deleted from user
+	var/distance = 1	//How far the action can reach
+
+	var/actiontype = 0 //0 = neutral, -n = aggressive, +n = helping
+	var/list/targetimages = list()
 
 	New(loc)
 		..()
@@ -14,10 +18,55 @@ datum/cyberaction
 	Del()
 		..()
 
+	proc/get_targets()
+		var/list/rlist = list()
+
+		for(var/xx = -distance, xx <= distance, xx++)
+			for(var/yy = -distance, yy <= distance, yy++)
+				var/obj/effect/cyberspace/sector/S = owner.gettile(owner.cyberx + xx,owner.cybery + yy)
+
+				if(!S) continue
+
+				var/dist = abs(S.cyberx - owner.cyberx) + abs(S.cybery - owner.cybery)
+
+				if(dist <= distance)
+					rlist += S
+
+		return rlist
+
+	proc/show_targets(var/user,var/show = 1)
+		if(!show)
+			for(var/image/I in targetimages)
+				del(I)
+			targetimages.Cut()
+			return
+
+		var/list/targets = get_targets()
+		var/targeticon = "overlay_move"
+
+		if(actiontype < 0)
+			targeticon = "overlay_attack"
+		else if(actiontype > 0)
+			targeticon = "overlay_help"
+
+		for(var/target in targets)
+			var/image/I = image('screen_network.dmi',target,targeticon)
+			user << I
+			targetimages += I
+
 	proc/isowner(var/datum/cyberuser/user)
 		if(!owner) return 0
 
 		return owner.owner == user
+
+	proc/can_use()
+		if(owner.get_size() >= sizereq)
+			return 1
+
+		return 0
+
+	proc/after_use()
+		owner.damage(cost)
 
 	proc/use(var/obj/effect/cyberspace/target)
 		return 0
@@ -34,11 +83,29 @@ datum/cyberaction
 	move
 		name = "Move"
 		icon_state = "move"
-		var/distance = 1
+		//var/distance = 1
 
 		New()
 			..()
-			desc = "Moves up to [get_range_name(distance)] squares."
+			desc = "Moves up to [get_range_name(owner.movespeed)]."
+
+		get_targets()
+			var/list/rlist = list()
+
+			var/maxdist = owner.movespeed
+
+			for(var/xx = -maxdist, xx <= maxdist, xx++)
+				for(var/yy = -maxdist, yy <= maxdist, yy++)
+					var/obj/effect/cyberspace/sector/S = owner.gettile(owner.cyberx + xx,owner.cybery + yy)
+
+					if(!S) continue
+
+					var/dist = abs(S.cyberx - owner.cyberx) + abs(S.cybery - owner.cybery)
+
+					if(dist <= maxdist)
+						rlist += S
+
+			return rlist
 
 		use(var/obj/effect/cyberspace/target)
 			if(!istype(target,/obj/effect/cyberspace/sector))
@@ -55,8 +122,9 @@ datum/cyberaction
 	attack
 		name = "Attack"
 		icon_state = "slam"
-		var/distance = 1
+		//var/distance = 1
 		var/attackpower = 1
+		actiontype = -1
 
 		//Sentinel
 		cut
@@ -302,7 +370,8 @@ datum/cyberaction
 		name = "Zero"
 		desc = "Deletes one grid square."
 		icon_state = "bit0"
-		var/distance = 1
+		//var/distance = 1
+		actiontype = 1
 
 		use(var/obj/effect/cyberspace/target)
 			if(!istype(target,/obj/effect/cyberspace/sector)) return 0
@@ -320,7 +389,8 @@ datum/cyberaction
 		name = "One"
 		desc = "Repairs one grid square."
 		icon_state = "bit1"
-		var/distance = 1
+		//var/distance = 1
+		actiontype = 1
 
 		use(var/obj/effect/cyberspace/target)
 			if(!istype(target,/obj/effect/cyberspace/sector)) return 0
@@ -337,7 +407,8 @@ datum/cyberaction
 	fusion
 		name = "Fusion"
 		icon_state = "zap"
-		var/distance = 1
+		//var/distance = 1
+		actiontype = 1
 
 		fusionbomb
 			name = "Fusionbomb"
@@ -358,29 +429,32 @@ datum/cyberaction
 	sizechange
 		name = "Sizechange"
 		icon_state = "tweak"
-		var/distance = 1
+		//var/distance = 1
 		var/sizepower = 0
 
 		surgery
 			name = "Surgery"
 			icon_state = "hack"
 			sizepower = 1
+			actiontype = 1
 
 		twiddle
 			name = "Twiddle"
 			icon_state = "extend"
 			sizepower = 1
 			cost = 1
+			actiontype = 1
 
 		stretch
 			name = "Stretch"
 			icon_state = "extend"
 			sizepower = 1
+			actiontype = 1
 
 	speedchange
 		name = "Speedchange"
 		icon_state = "clog"
-		var/distance = 1
+		//var/distance = 1
 		var/speedpower = 0
 
 		boost
@@ -389,6 +463,7 @@ datum/cyberaction
 			distance = 1
 			speedpower = 1
 			cost = 1
+			actiontype = 1
 
 		megaboost
 			name = "Megaboost"
@@ -397,24 +472,28 @@ datum/cyberaction
 			speedpower = 2
 			sizereq = 3
 			cost = 2
+			actiontype = 1
 
 		tweak
 			name = "Tweak"
 			icon_state = "distill"
 			speedpower = 1
 			cost = 1
+			actiontype = 1
 
 		lag
 			name = "Lag"
 			icon_state = "clog"
 			distance = 3
 			speedpower = -1
+			actiontype = -1
 
 		chug
 			name = "Chug"
 			icon_state = "clog"
 			distance = 3
 			speedpower = -2
+			actiontype = -1
 
 		hang //Completely stops the enemy program
 			name = "Hang"
@@ -422,18 +501,21 @@ datum/cyberaction
 			distance = 3
 			speedpower = -99999
 			sizereq = 4
+			actiontype = -1
 
 		paralyze
 			name = "Paralyze"
 			icon_state = "shutdown"
 			distance = 1
 			speedpower = -3
+			actiontype = -1
 
 		ice
 			name = "Ice"
 			icon_state = "freeze"
 			distance = 2
 			speedpower = -3
+			actiontype = -1
 
 		use(var/obj/effect/cyberspace/target)
 			if(!istype(target,/obj/effect/cyberspace/program)) return 0
@@ -451,7 +533,8 @@ datum/cyberaction
 		desc = "Adds 1 sector to target"
 		icon_state = "heal"
 		var/healpower = 1
-		var/distance = 1
+		actiontype = 1
+		//var/distance = 1
 
 		grow
 			name = "Grow"
@@ -487,10 +570,12 @@ datum/cyberaction
 		name = "Install"
 		desc = "Installs one new program"
 		icon_state = "install"
+		actiontype = 1
+
 		var/list/possibleprograms = list(/obj/effect/cyberspace/program/sentinel1,
 			/obj/effect/cyberspace/program/data_doctor,
 			/obj/effect/cyberspace/program/bit_man)
-		var/distance = 1
+		//var/distance = 1
 
 		use(var/obj/effect/cyberspace/target)
 			if(!istype(target,/obj/effect/cyberspace/sector)) return 0
@@ -508,6 +593,8 @@ datum/cyberaction
 		desc = "Adds 5 sectors to user"
 		icon_state = "hog"
 		var/healpower = 5
+		distance = 0
+		actiontype = 1
 
 		use(var/obj/effect/cyberspace/target)
 			owner.grow(healpower)

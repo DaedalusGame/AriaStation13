@@ -30,6 +30,10 @@ datum/cyberuser
 
 	var/width
 	var/height
+
+	var/hudwidth = 15
+	var/hudheight = 15
+
 	var/message_history_full = ""
 	var/message_history_new = ""
 
@@ -101,12 +105,28 @@ datum/cyberuser
 	proc/click_act(var/obj/effect/cyberspace/clicktarget)
 		if(istype(clicktarget,/obj/effect/cyberspace/program))
 			if(selected_action)
-				selected_action.actionref.use(clicktarget)
+				var/used = 0
+
+				if(selected_action.actionref && selected_action.actionref.can_use(clicktarget))
+					used = selected_action.actionref.use(clicktarget)
+					selected_action.actionref.after_use()
+
+				if(!used)
+					select(clicktarget)
 			else
 				select(clicktarget)
 		if(istype(clicktarget,/obj/effect/cyberspace/sector))
 			if(selected_action)
-				selected_action.actionref.use(clicktarget)
+				var/used = 0
+
+				if(selected_action.actionref && selected_action.actionref.can_use(clicktarget))
+					used = selected_action.actionref.use(clicktarget)
+					selected_action.actionref.after_use()
+
+				if(!used)
+					select(null)
+			else
+				select(null)
 		if(istype(clicktarget,/obj/effect/cyberspace/screen/action))
 			var/obj/effect/cyberspace/screen/action/A = clicktarget
 
@@ -124,7 +144,14 @@ datum/cyberuser
 	proc/select_action(var/obj/effect/cyberspace/screen/action/act)
 		//if(selected.owner != src) return
 
+		if(selected_action && selected_action.actionref)
+			selected_action.actionref.show_targets(usr,0)
+
 		selected_action = act
+
+		if(selected_action && selected_action.actionref)
+			selected_action.actionref.show_targets(usr,1)
+
 		updatehud()
 
 	/*proc/findclient()
@@ -175,11 +202,11 @@ datum/cyberuser
 		return 0*/
 
 	proc/updatehud()
-		topmessage.pre_screen_loc = "0,[height]"
-		topmessagebox.pre_screen_loc = "0,[height] to [width-1],[height]"
+		topmessage.pre_screen_loc = "0,[hudheight]"
+		topmessagebox.pre_screen_loc = "0,[hudheight] to [hudwidth-1],[hudheight]"
 		bottommessage.pre_screen_loc = "0,-1"
-		bottommessagebox.pre_screen_loc = "0,-1 to [width-1],-1"
-		blocker.pre_screen_loc = "5,-2 to [width-1],-2"
+		bottommessagebox.pre_screen_loc = "0,-1 to [hudwidth-1],-1"
+		blocker.pre_screen_loc = "5,-2 to [hudwidth-1],-2"
 		action1.pre_screen_loc = "0,-2"
 		action2.pre_screen_loc = "1,-2"
 		action3.pre_screen_loc = "2,-2"
@@ -191,8 +218,8 @@ datum/cyberuser
 			else
 				A.icon_state = "slot0"*/
 
-		topmessage.maptext_width = width * 32
-		bottommessage.maptext_width = width * 32
+		topmessage.maptext_width = hudwidth * 32
+		bottommessage.maptext_width = hudwidth * 32
 
 		if(selected_action)
 			topmessage.maptext = "<text align=top><FONT COLOR='#00FF00'>[selected_action.actionref.name]<BR>[selected_action.actionref.desc]</FONT></text>"
@@ -489,6 +516,9 @@ obj/effect/cyberspace/sector
 
 	proc/has_enemy(var/obj/effect/cyberspace/program/prg)
 		var/obj/effect/cyberspace/program/P = locate() in src
+
+		if(!P)
+			return 0
 
 		if(istype(P,/obj/effect/cyberspace/program/tail))
 			var/obj/effect/cyberspace/program/tail/T = P

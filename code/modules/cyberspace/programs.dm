@@ -109,7 +109,7 @@ obj/effect/cyberspace/program
 	proc/movepath(var/obj/effect/cyberspace/sector/dest)
 		//world << "moving [src] from \ref[src.loc] to \ref[dest]"
 
-		var/list/path = AStar(src.loc, dest, /obj/effect/cyberspace/sector/proc/get_adjacent_sectors, /obj/effect/cyberspace/sector/proc/distance_ortho, 0, 120)
+		var/list/path = AStar(src.loc, dest, /obj/effect/cyberspace/sector/proc/get_adjacent_sectors, /obj/effect/cyberspace/sector/proc/distance_ortho, movespeed, 120)
 		path = reverselist(path)
 
 		for(var/obj/effect/cyberspace/sector/pathsegment in path)
@@ -151,6 +151,9 @@ obj/effect/cyberspace/program
 		//else
 			//world << "Failed"
 
+	proc/get_size()
+		return (trail.len + 1)
+
 	proc/get_adjacent_sectors()
 		if(!istype(loc,/obj/effect/cyberspace/sector)) return list()
 
@@ -166,9 +169,26 @@ obj/effect/cyberspace/program
 			del(src)
 
 	proc/damage(var/n)
+		particle_explode(16)
+
 		while(n)
 			deletetail()
 			n--
+
+	proc/particle_explode(var/n)
+		for(var/i = 0, i < n, i++)
+			var/image/I = image('effects.dmi',src.loc,"white")
+			world << I
+
+			var/matrix/start = matrix()
+			start.Scale(0.25,0.25)
+			start.Turn(128)
+			var/matrix/end = matrix()
+			end.Scale(0.25,0.25)
+			end.Turn(0)
+
+			animate(I, transform = start, time = 0, loop=-1)
+			animate(transform=end,alpha = 0,pixel_x = rand(-200,200),pixel_y = rand(-200,200),time=rand(5,15), loop=-1)
 
 	proc/grow(var/n)
 		var/i = rand(0,trail.len)
