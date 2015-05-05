@@ -254,18 +254,24 @@ client/proc/hide_cyberspace()
 	winshow(src,"cyberwindow",0)
 
 client/proc/update_cyberspace(var/datum/cyberuser/CU)
-	screen -= cyberlist
-
 	if(!CU.currentmap) return
 
-	cyberlist = CU.getallcontents()
+	var/newcyberlist = CU.getallcontents()
+
+	for(var/atom/A in cyberlist)
+		if(!(A in newcyberlist))
+			screen -= A
 
 	for(var/obj/effect/cyberspace/S in cyberlist)
 		S.update_cybericon()
 		if(S.pre_screen_loc)
 			S.screen_loc = "cybermap:[S.pre_screen_loc]"
 
-	screen += cyberlist
+	for(var/atom/A in newcyberlist)
+		if(!(A in cyberlist))
+			screen += A
+
+	cyberlist = newcyberlist
 
 
 obj/effect/cyberspace
@@ -411,9 +417,12 @@ obj/effect/cyberspace/mapholder
 			var/xo = ((d & 4) > 0) - ((d & 8) > 0)
 			var/yo = ((d & 1) > 0) - ((d & 2) > 0)
 
-			rlist += gettile(xx + xo,yy + yo)
+			var/obj/effect/cyberspace/sector/S = gettile(xx + xo,yy + yo)
 
-			world << "adjacent: [gettile(xx + xo,yy + yo)]"
+			if(S && !S.is_solid())
+				rlist += S
+
+			//world << "adjacent: [gettile(xx + xo,yy + yo)]"
 
 		return rlist
 
@@ -462,12 +471,41 @@ obj/effect/cyberspace/sector
 
 		deploy(prog)
 
+	proc/install_proc(var/mob/user,var/list/programs)
+		var/prog = input(user,"Select a program","Install Wizard") in programs
+
+		if(!prog) return 0
+
+		deploy(prog)
+
+		return 1
+
+	proc/is_solid()
+		switch(state)
+			if(2,3)
+				return 1
+			else
+				return 0
+
+	proc/has_enemy(var/obj/effect/cyberspace/program/prg)
+		var/obj/effect/cyberspace/program/P = locate() in src
+
+		if(istype(P,/obj/effect/cyberspace/program/tail))
+			var/obj/effect/cyberspace/program/tail/T = P
+
+			if(T.master != prg)
+				return 1
+		else if(P != prg)
+			return 1
+
+		return 0
+
 	proc/setstate(id)
 		state = id
 		update_cybericon()
 
 	proc/deploy(var/type,var/datum/cyberuser/owner = null)
-		if(state == 0 && !locate(/obj/effect/cyberspace/program) in src)
+		if(!is_solid() && !locate(/obj/effect/cyberspace/program) in src)
 			var/obj/effect/cyberspace/program/P = new type(src)
 			P.owner = owner
 			return P
@@ -490,7 +528,7 @@ obj/effect/cyberspace/sector
 		..()
 
 	proc/get_adjacent_sectors(var/id=null)
-		world << "trying to get adjacent sectors"
+		//world << "trying to get adjacent sectors"
 
 		if(!istype(loc,/obj/effect/cyberspace/mapholder)) return list()
 
