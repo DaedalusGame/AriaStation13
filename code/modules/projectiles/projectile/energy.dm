@@ -52,7 +52,19 @@
 	name = "\improper Large Bolt"
 	damage = 20
 
+/obj/item/projectile/energy/fireball
+	name = "fireball"
+	icon_state = "fireball"
+	damage = 10
+	damage_type = BRUTE
+	nodamage = 0
+	//flag = "magic"
 
-
+/obj/item/projectile/energy/fireball/on_hit(var/target)
+	var/turf/T = get_turf(target)
+	explosion(T, -1, 0, 2, 3, 0, flame_range = 2)
+	if(ismob(target)) //multiple flavors of pain
+		var/mob/living/M = target
+		M.take_overall_damage(0,10) //between this 10 burn, the 10 brute, the explosion brute, and the onfire burn, your at about 65 damage if you stop drop and roll immediately
 
 

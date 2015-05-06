@@ -1,12 +1,12 @@
 // BEGIN_INTERNALS
 /*
 MAP_ICON_TYPE: 0
-WINDOW: code\modules\cyberspace\actions.dm;icons\mob\screen_network.dmi;code\modules\cyberspace\programs.dm;icons\obj\network.dmi;code\modules\cyberspace\cyberspace.dm;maps\revostation.0.8.dmm;code\defines\procs\AStar.dm;icons\effects\effects.dmi
+WINDOW: code\modules\research\experimentor.dm;code\modules\research\xenoarchaeology\artifacts.dm;code\access_defines.dm;code\datums\recipe.dm;code\defines\obj.dm;code\defines\obj\computer.dm;code\defines\obj\decal.dm;code\defines\obj\supplypacks.dm;code\game\dna.dm;code\game\prisonshuttle.dm;code\game\objects\biomass.dm;code\game\objects\uplinks.dm;code\modules\cargo\supplycomputer.dm;code\modules\chemical\Chemistry-Machinery.dm;code\defines\obj\weapon.dm;code\modules\research\circuitprinter.dm;code\modules\research\designs.dm;code\game\machinery\computer\buildandrepair.dm;code\modules\research\rd-readme.dm;code\WorkInProgress\SkyMarshal\wardrobes.dm;code\defines\obj\storage.dm;code\defines\obj\vending.dm;code\game\chemistry.dm;code\game\mecha\combat\gygax.dm;code\game\mecha\equipment\weapons\weapons.dm;code\game\objects\new_year.dm;code\game\objects\closets\nuclear.dm;code\game\objects\closets\thunderdome.dm;code\game\objects\closets\secure\security.dm;code\game\objects\items\weapons\grenades.dm
 LAST_COMPILE_VERSION: 504.1234
 UPDATE_OBJ_TREE: ON
-DIR: code code\ATMOSPHERICS\components code\ATMOSPHERICS\components\binary_devices code\ATMOSPHERICS\components\unary code\defines code\defines\mob\dead code\defines\mob\living code\defines\mob\living\carbon code\defines\procs code\defines\sd_procs code\game\machinery code\game\objects code\game\objects\items code\game\objects\storage code\modules code\modules\cargo code\modules\crafting code\modules\cyberspace code\modules\food code\modules\misc code\modules\mob\living\silicon code\modules\mob\living\silicon\ai code\modules\network code\modules\projectiles\projectile code\modules\spacepods code\WorkInProgress\SkyMarshal code\WorkInProgress\virus2 icons icons\effects icons\mecha icons\mob icons\obj icons\turf interface maps sound 
-FILE: code\modules\cyberspace\actions.dm
-LAST_COMPILE_TIME: 1430833616
+DIR: code code\ATMOSPHERICS\components code\ATMOSPHERICS\components\binary_devices code\ATMOSPHERICS\components\unary code\defines code\defines\mob\dead code\defines\mob\living code\defines\mob\living\carbon code\defines\obj code\game code\game\machinery code\game\machinery\computer code\game\mecha code\game\mecha\combat code\game\mecha\equipment code\game\mecha\equipment\weapons code\game\objects code\game\objects\closets code\game\objects\closets\secure code\game\objects\items code\game\objects\items\weapons code\game\objects\storage code\modules code\modules\chemical code\modules\crafting code\modules\cyberspace code\modules\food code\modules\mining code\modules\misc code\modules\mob\living\silicon code\modules\mob\living\silicon\ai code\modules\network code\modules\projectiles\projectile code\modules\recycling code\modules\research code\modules\scripting\Interpreter code\modules\spacepods code\WorkInProgress code\WorkInProgress\SkyMarshal code\WorkInProgress\virus2 code\ZAS icons icons\turf interface maps sound 
+FILE: code\modules\research\experimentor.dm
+LAST_COMPILE_TIME: 1430858745
 AUTO_FILE_DIR: ON
 */
 // END_INTERNALS
