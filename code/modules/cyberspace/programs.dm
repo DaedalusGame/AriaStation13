@@ -23,6 +23,9 @@ obj/effect/cyberspace/program
 	var/action4_type
 	var/action5_type
 
+	var/icon/mainicon
+	var/icon/connecticon
+
 	New(loc)
 		..()
 
@@ -43,7 +46,8 @@ obj/effect/cyberspace/program
 
 		grow(initialsize)
 
-		update_cybericon()
+		spawn(1)
+			update_cybericon()
 
 	Move(loc,dir)
 		var/obj/effect/cyberspace/sector/S = loc
@@ -61,19 +65,33 @@ obj/effect/cyberspace/program
 		if(c.currentcyberspace)
 			c.currentcyberspace.select(src)*/
 
+	proc/init_programicon()
+		mainicon = icon(preicon,"program")
+		mainicon.Blend(cybercolor,ICON_MULTIPLY)
+
+		connecticon = icon(preicon,"program-c")
+		connecticon.Blend(cybercolor,ICON_MULTIPLY)
+
 	update_cybericon()
-		if(!preicon)
-			preicon = icon
+		overlays.Cut()
 
 		var/obj/effect/cyberspace/program/head = src
 		if(istype(src,/obj/effect/cyberspace/program/tail))
 			head = src:master
+
 			//world << "Master: [src:master]"
+
+		if(!preicon)
+			preicon = icon
+
+			if(head == src)
+				init_programicon()
 
 		if(!head) return
 
-		var/icon/newicon = icon(preicon,"program")
-		newicon.Blend(head.cybercolor,ICON_MULTIPLY)
+		//var/icon/newicon = icon(preicon,"program")
+		//newicon.Blend(head.cybercolor,ICON_MULTIPLY)
+		icon = head.mainicon
 
 		//world << head.cybercolor
 
@@ -90,18 +108,23 @@ obj/effect/cyberspace/program
 			var/obj/effect/cyberspace/program/T = locate() in S
 
 			if(T && (T == head || (istype(T,/obj/effect/cyberspace/program/tail) && T:master == head)))
-				var/icon/diricon = icon(preicon,"program-c",d)
-				diricon.Blend(head.cybercolor,ICON_MULTIPLY)
-				newicon.Blend(diricon,ICON_OVERLAY)
+				//var/icon/diricon = icon(preicon,"program-c",d)
+				//diricon.Blend(head.cybercolor,ICON_MULTIPLY)
+				//newicon.Blend(diricon,ICON_OVERLAY)
+				overlays += icon(head.connecticon,dir=d)
 
 				//world << head.cybercolor
 				//world << T
 
 		if(head == src)
-			newicon.Blend(icon(preicon,icon_state),ICON_OVERLAY)
-		icon = newicon
+			overlays += icon(preicon,icon_state)
+			//newicon.Blend(icon(preicon,icon_state),ICON_OVERLAY)
+		//icon = newicon
 
 		..()
+
+	get_program()
+		return src
 
 	proc/movepathto(x,y)
 		return movepath(gettile(x,y))
@@ -169,30 +192,24 @@ obj/effect/cyberspace/program
 			del(src)
 
 	proc/damage(var/n)
-		particle_explode(16)
+		if(n)
+			particle_explode(16,"#FFFFFF")
 
-		while(n)
+		while(n--)
 			deletetail()
-			n--
+			sleep(0.1)
 
-	proc/particle_explode(var/n)
-		for(var/i = 0, i < n, i++)
-			var/image/I = image('effects.dmi',src.loc,"white")
-			world << I
+	particle_explode(var/n,var/color = "#FFFFFF")
+		var/obj/effect/cyberspace/sector/sec = loc
 
-			var/matrix/start = matrix()
-			start.Scale(0.25,0.25)
-			start.Turn(128)
-			var/matrix/end = matrix()
-			end.Scale(0.25,0.25)
-			end.Turn(0)
-
-			animate(I, transform = start, time = 0, loop=-1)
-			animate(transform=end,alpha = 0,pixel_x = rand(-200,200),pixel_y = rand(-200,200),time=rand(5,15), loop=-1)
+		sec.particle_explode(n,color)
 
 	proc/grow(var/n)
 		var/i = rand(0,trail.len)
 		var/e = 0
+
+		if(n)
+			particle_explode(16,"#00FFFF")
 
 		while(n && e < 3)
 			var/obj/effect/cyberspace/program/TI
@@ -207,11 +224,14 @@ obj/effect/cyberspace/program
 				TI = trail[i]
 
 			for(var/obj/effect/cyberspace/sector/S in TI.get_adjacent_sectors())
+				if(!n) break
+
 				var/obj/effect/cyberspace/program/tail/T = S.deploy(/obj/effect/cyberspace/program/tail)
 				if(T)
 					T.master = src
 					trail.Add(T)
 					n--
+					sleep(0.1)
 
 			i++
 
@@ -225,21 +245,26 @@ obj/effect/cyberspace/program
 		if(M)
 			return M.gettile(x,y)
 
-	proc/getmap()
+	getmap()
 		var/obj/effect/cyberspace/sector/S = loc
 
 		if(S)
-			return S.loc
+			return S.getmap()
 
 	tail	//Technical program that is created as the tail of a moving program
 		name = "\improper TAIL"
 		var/obj/effect/cyberspace/program/master
 
 		damage(var/n)
+			if(!master) return
 			master.damage(n)
 
 		grow(var/n)
+			if(!master) return
 			master.grow(n)
+
+		get_program()
+			return master
 
 	//Hack series
 	hack1

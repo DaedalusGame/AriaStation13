@@ -202,6 +202,7 @@
 	//var/datum/browser/popup = new(user, "experimentor","Experimentor", 700, 400, src)
 	//popup.set_content(dat)
 	//popup.open()
+	user << browse("<HTML><HEAD><TITLE>Experimentor</TITLE></HEAD><BODY><TT>[dat]</TT></BODY></HTML>", "window=experimentor")
 	onclose(user, "experimentor")
 
 

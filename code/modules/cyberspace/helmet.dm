@@ -64,7 +64,7 @@
 
 	NT.requestid()
 
-	world << "Found [NT]"
+	//world << "Found [NT]"
 
 	var/list/allterms = NT.getallhosts()
 	var/list/cyberterms = list()
@@ -72,7 +72,7 @@
 	for (var/obj/machinery/power/netterm/term in allterms)
 		var/cybermap = term.get_cybermap(1)
 
-		world << "Testing [term] of [term.master] [cybermap]"
+		//world << "Testing [term] of [term.master] [cybermap]"
 
 		if(cybermap) cyberterms["[term.netid] ([term.nettype])"] = term
 
@@ -82,8 +82,9 @@
 		jacktarget = cyberterms[pickedtarget]
 		jacksource = NT
 		cyuser.currentmap = jacktarget.get_cybermap(1)
+		cyuser.login(programstorage)
 
-		world << "Found cybermap in [jacktarget]"
+		//world << "Found cybermap in [jacktarget]"
 
 /obj/item/clothing/head/helmet/cyber/proc/update()
 	var/mob/living/carbon/human/M = loc
@@ -98,6 +99,7 @@
 	spawn(5) .()
 
 /obj/item/clothing/head/helmet/cyber/proc/toggle_off()
+	cyuser.logout()
 	jacktarget = null
 	jacksource = null
 	lastworn = null

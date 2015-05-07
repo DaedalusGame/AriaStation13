@@ -355,9 +355,13 @@ datum/cyberaction
 			desc = "Deletes [attackpower] sectors."
 
 		use(var/obj/effect/cyberspace/target)
-			if(!istype(target,/obj/effect/cyberspace/program)) return 0
+			//if(!istype(target,/obj/effect/cyberspace/program))
+			//	target = target.get_program()
 
-			var/obj/effect/cyberspace/program/P = target
+			//if(!target) return 0
+
+			var/obj/effect/cyberspace/program/P = target.get_program()
+			if(!P) return 0
 			var/dist = abs(P.cyberx - owner.cyberx) + abs(P.cybery - owner.cybery)
 
 			if(dist <= distance && P != src)
@@ -380,6 +384,7 @@ datum/cyberaction
 			var/dist = abs(S.cyberx - owner.cyberx) + abs(S.cybery - owner.cybery)
 
 			if(dist <= distance)
+				S.particle_explode(10,"#00FF00")
 				S.destroy()
 				return 1
 
@@ -399,6 +404,7 @@ datum/cyberaction
 			var/dist = abs(S.cyberx - owner.cyberx) + abs(S.cybery - owner.cybery)
 
 			if(dist <= distance)
+				S.particle_explode(10,"#00FF00")
 				S.repair()
 				return 1
 
@@ -415,14 +421,23 @@ datum/cyberaction
 			icon_state = "fusionbomb"
 
 		use(var/obj/effect/cyberspace/target)
-			if(!istype(target,/obj/effect/cyberspace/program)) return 0
+			//if(!istype(target,/obj/effect/cyberspace/program))
+			//	target = target.get_program()
 
-			var/obj/effect/cyberspace/program/P = target
+			//if(!target) return 0
+
+			var/obj/effect/cyberspace/program/P = target.get_program()
+			if(!P) return 0
+
 			var/dist = abs(P.cyberx - owner.cyberx) + abs(P.cybery - owner.cybery)
 
 			if(dist <= distance && P != src)
 				P.maxlength = max(P.maxlength + owner.maxlength,1)
+				P.particle_explode(6,"#FFFF00")
+				P.particle_explode(6,"#FF0000")
 				owner.damage(99999)
+				owner.particle_explode(6,"#FFFF00")
+				owner.particle_explode(6,"#FF0000")
 
 			return 0
 
@@ -450,6 +465,22 @@ datum/cyberaction
 			icon_state = "extend"
 			sizepower = 1
 			actiontype = 1
+
+		use(var/obj/effect/cyberspace/target)
+			//if(!istype(target,/obj/effect/cyberspace/program))
+			//	target = target.get_program()
+			//
+			//if(!target) return 0
+
+			var/obj/effect/cyberspace/program/P = target.get_program()
+			if(!P) return 0
+
+			var/dist = abs(P.cyberx - owner.cyberx) + abs(P.cybery - owner.cybery)
+
+			if(dist <= distance && P != src)
+				P.maxlength = max(P.maxlength + sizepower,1)
+
+			return 0
 
 	speedchange
 		name = "Speedchange"
@@ -518,13 +549,16 @@ datum/cyberaction
 			actiontype = -1
 
 		use(var/obj/effect/cyberspace/target)
-			if(!istype(target,/obj/effect/cyberspace/program)) return 0
+			//if(!istype(target,/obj/effect/cyberspace/program)) return 0
 
-			var/obj/effect/cyberspace/program/P = target
+			var/obj/effect/cyberspace/program/P = target.get_program()
+			if(!P) return 0
+
 			var/dist = abs(P.cyberx - owner.cyberx) + abs(P.cybery - owner.cybery)
 
 			if(dist <= distance && P != src)
 				P.movespeed = max(P.movespeed - speedpower,0)
+				P.particle_explode(10,"#FFFF00")
 
 			return 0
 
@@ -556,9 +590,11 @@ datum/cyberaction
 			healpower = 4
 
 		use(var/obj/effect/cyberspace/target)
-			if(!istype(target,/obj/effect/cyberspace/program)) return 0
+			//if(!istype(target,/obj/effect/cyberspace/program)) return 0
 
-			var/obj/effect/cyberspace/program/P = target
+			var/obj/effect/cyberspace/program/P = target.get_program()
+			if(!P) return 0
+
 			var/dist = abs(P.cyberx - owner.cyberx) + abs(P.cybery - owner.cybery)
 
 			if(dist <= distance && P != src)

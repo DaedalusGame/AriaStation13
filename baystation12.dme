@@ -752,6 +752,7 @@
 #include "code\modules\customitems\item_defines.dm"
 #include "code\modules\customitems\item_spawning.dm"
 #include "code\modules\cyberspace\actions.dm"
+#include "code\modules\cyberspace\ai_control.dm"
 #include "code\modules\cyberspace\cyberspace.dm"
 #include "code\modules\cyberspace\helmet.dm"
 #include "code\modules\cyberspace\machines.dm"

@@ -1,3 +1,6 @@
+var/hudwidth = 13
+var/hudheight = 13
+
 turf/cyberspace
 	name = "sector"
 	icon = 'network.dmi'
@@ -28,11 +31,10 @@ datum/cyberuser
 	var/obj/effect/cyberspace/program/selected
 	var/obj/effect/cyberspace/screen/action/selected_action
 
+	var/list/allprograms = list()
+
 	var/width
 	var/height
-
-	var/hudwidth = 15
-	var/hudheight = 15
 
 	var/message_history_full = ""
 	var/message_history_new = ""
@@ -103,19 +105,28 @@ datum/cyberuser
 		..()
 
 	proc/click_act(var/obj/effect/cyberspace/clicktarget)
-		if(istype(clicktarget,/obj/effect/cyberspace/program))
-			if(selected_action)
-				var/used = 0
+		if(istype(clicktarget,/obj/effect/cyberspace/screen/action))
+			var/obj/effect/cyberspace/screen/action/A = clicktarget
 
+			if(A.actionref && selected_action != clicktarget)
+				select_action(clicktarget)
+			else
+				select_action(null)
+		else
+			var/obj/effect/cyberspace/program/targetprogram = clicktarget.get_program()
+
+			var/used = 0
+
+			if(selected_action)
 				if(selected_action.actionref && selected_action.actionref.can_use(clicktarget))
 					used = selected_action.actionref.use(clicktarget)
 					selected_action.actionref.after_use()
+					select_action(null)
 
-				if(!used)
-					select(clicktarget)
-			else
-				select(clicktarget)
-		if(istype(clicktarget,/obj/effect/cyberspace/sector))
+			if(!used)
+				select(targetprogram)
+				select_action(null)
+		/*if(istype(clicktarget,/obj/effect/cyberspace/sector))
 			if(selected_action)
 				var/used = 0
 
@@ -125,18 +136,14 @@ datum/cyberuser
 
 				if(!used)
 					select(null)
+					select_action(null)
 			else
 				select(null)
-		if(istype(clicktarget,/obj/effect/cyberspace/screen/action))
-			var/obj/effect/cyberspace/screen/action/A = clicktarget
+				select_action(null)*/
 
-			if(A.actionref && selected_action != clicktarget)
-				select_action(clicktarget)
-			else
-				select_action(null)
 
 	proc/select(var/obj/effect/cyberspace/program/PRG)
-		//if(selected.owner != src) return
+		if(PRG && PRG.owner != src) return
 
 		selected = PRG
 		updatehud()
@@ -202,16 +209,16 @@ datum/cyberuser
 		return 0*/
 
 	proc/updatehud()
-		topmessage.pre_screen_loc = "0,[hudheight]"
-		topmessagebox.pre_screen_loc = "0,[hudheight] to [hudwidth-1],[hudheight]"
-		bottommessage.pre_screen_loc = "0,-1"
-		bottommessagebox.pre_screen_loc = "0,-1 to [hudwidth-1],-1"
-		blocker.pre_screen_loc = "5,-2 to [hudwidth-1],-2"
-		action1.pre_screen_loc = "0,-2"
-		action2.pre_screen_loc = "1,-2"
-		action3.pre_screen_loc = "2,-2"
-		action4.pre_screen_loc = "3,-2"
-		action5.pre_screen_loc = "4,-2"
+		topmessage.pre_screen_loc = "0,[hudheight-1]"
+		topmessagebox.pre_screen_loc = "0,[hudheight-1] to [hudwidth-1],[hudheight-1]"
+		bottommessage.pre_screen_loc = "0,1"
+		bottommessagebox.pre_screen_loc = "0,1 to [hudwidth-1],1"
+		blocker.pre_screen_loc = "5,0 to [hudwidth-1],0"
+		action1.pre_screen_loc = "0,0"
+		action2.pre_screen_loc = "1,0"
+		action3.pre_screen_loc = "2,0"
+		action4.pre_screen_loc = "3,0"
+		action5.pre_screen_loc = "4,0"
 		/*for(var/obj/effect/cyberspace/screen/action/A in hud)
 			if(selected)
 				A.icon_state = "slot1"
@@ -222,8 +229,11 @@ datum/cyberuser
 		bottommessage.maptext_width = hudwidth * 32
 
 		if(selected_action)
-			topmessage.maptext = "<text align=top><FONT COLOR='#00FF00'>[selected_action.actionref.name]<BR>[selected_action.actionref.desc]</FONT></text>"
-		else if(selected)
+			bottommessage.maptext = "<text align=top><FONT COLOR='#00FF00'>[selected_action.actionref.name]<BR>[selected_action.actionref.desc]</FONT></text>"
+		else
+			bottommessage.maptext = ""
+
+		if(selected)
 			topmessage.maptext = "<text align=top><FONT COLOR='#00FF00'>[selected.name]<BR>[selected.desc]</FONT></text>"
 		else
 			topmessage.maptext = "<text align=top><FONT COLOR='#00FF00'>NO PROGRAM SELECTED</FONT></text>"
@@ -242,6 +252,35 @@ datum/cyberuser
 			action4.actionref = null
 			action5.actionref = null
 
+	proc/login(var/list/programlist)
+		if(!currentmap)
+			return
+
+		var/list/loginlocs = currentmap.getedgetiles()
+
+		for(var/obj/effect/cyberspace/sector/S in loginlocs)
+			if(S.get_program())
+				loginlocs -= S
+
+		for(var/program in programlist)
+			if(!loginlocs.len) break
+
+			var/obj/effect/cyberspace/sector/loginloc = pick(loginlocs)
+
+			allprograms += loginloc.deploy(program,src)
+
+			loginlocs -= loginloc
+
+		currentmap.sendmessage("User logging in...")
+
+	proc/logout()
+		if(!currentmap)
+			return
+
+		for(var/obj/effect/cyberspace/program/prg in allprograms)
+			prg.damage(99999)
+
+		currentmap.sendmessage("User logging out...")
 
 	proc/sendmessage(string as text)
 		message_history_new += "[string]<BR>"
@@ -285,20 +324,24 @@ client/proc/update_cyberspace(var/datum/cyberuser/CU)
 
 	var/newcyberlist = CU.getallcontents()
 
-	for(var/atom/A in cyberlist)
-		if(!(A in newcyberlist))
-			screen -= A
+	screen -= cyberlist
+	//for(var/atom/A in cyberlist)
+	//	if(!(A in newcyberlist))
+	//		screen -= A
 
-	for(var/obj/effect/cyberspace/S in cyberlist)
+	cyberlist = newcyberlist
+
+	for(var/obj/effect/cyberspace/S in newcyberlist)
 		S.update_cybericon()
 		if(S.pre_screen_loc)
 			S.screen_loc = "cybermap:[S.pre_screen_loc]"
 
-	for(var/atom/A in newcyberlist)
-		if(!(A in cyberlist))
-			screen += A
+	screen += newcyberlist
+	//for(var/atom/A in newcyberlist)
+	//	if(!(A in cyberlist))
+	//		screen += A
 
-	cyberlist = newcyberlist
+
 
 
 obj/effect/cyberspace
@@ -306,8 +349,37 @@ obj/effect/cyberspace
 	var/cybery = 0
 	var/pre_screen_loc = null
 
-	proc/update_cybericon()
-		pre_screen_loc = "[cyberx-1],[cybery-1]"
+	proc/getmap()
+		return
+
+	proc/get_program()
+		return
+
+	proc/particle_explode(var/n,var/color = "#FFFFFF")
+		for(var/i = 0, i < n, i++)
+			var/image/I = image('effects.dmi',src,"white")
+			I.color = color
+			world << I
+
+			var/matrix/start = matrix()
+			start.Scale(0.25,0.25)
+			start.Turn(128)
+			var/matrix/end = matrix()
+			end.Scale(0.25,0.25)
+			end.Turn(0)
+
+			animate(I, transform = start, time = 0, loop=-1)
+			animate(transform=end,alpha = 0,pixel_x = rand(-200,200),pixel_y = rand(-200,200),time=rand(5,15), loop=-1)
+
+	proc/update_cybericon(var/datum/cyberuser/user)
+		var/obj/effect/cyberspace/mapholder/map = getmap()
+
+		if(!map) return
+
+		var/totalx = (cyberx-1) * 32 + hudwidth * 16 - map.width * 16
+		var/totaly = (cybery-1) * 32 + hudheight * 16 - map.height * 16
+
+		pre_screen_loc = "[round(totalx / 32)]:[totalx % 32],[round(totaly / 32)]:[totaly % 32]"
 
 	Click()
 		var/datum/cyberuser/user = usr.get_cyberspace_interface()
@@ -346,6 +418,9 @@ obj/effect/cyberspace/mapholder
 	var/list/connected = list()
 	var/width = 0
 	var/height = 0
+
+	getmap()
+		return src
 
 	proc/connect(var/datum/cyberuser/C)
 		if(C in connected) return
@@ -432,7 +507,7 @@ obj/effect/cyberspace/mapholder
 		var/list/edgetiles = list()
 
 		for(var/obj/effect/cyberspace/sector/S in src)
-			if(S.state == 0 && (S.cyberx <= 1 || S.cybery <= 1 || S.cyberx >= width || S.cybery >= height))
+			if(!S.is_solid() && (S.cyberx <= 1 || S.cybery <= 1 || S.cyberx >= width || S.cybery >= height))
 				edgetiles += S
 
 		return edgetiles
@@ -488,6 +563,17 @@ obj/effect/cyberspace/sector
 	New()
 		..()
 		variation = rand(0,1000)
+
+	getmap()
+		var/obj/effect/cyberspace/mapholder/map = loc
+
+		return map.getmap()
+
+	get_program()
+		var/obj/effect/cyberspace/program/prg = locate() in src
+
+		if(prg)
+			return prg.get_program()
 
 	verb/install()
 		var/list/programs = typesof(/obj/effect/cyberspace/program) - /obj/effect/cyberspace/program
