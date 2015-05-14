@@ -26,7 +26,7 @@
 	var/atom/jacktarget
 	var/obj/machinery/power/netterm/jacksource
 	var/datum/cyberuser/cyuser
-	var/list/programstorage = list(/obj/effect/cyberspace/program/hack1)
+	var/list/programstorage = list(/obj/effect/cyberspace/program/hack1,/obj/effect/cyberspace/program/slingshot,/obj/effect/cyberspace/program/bit_man)
 
 /obj/item/clothing/head/helmet/cyber/New()
 	cyuser = new()
@@ -81,7 +81,7 @@
 
 		jacktarget = cyberterms[pickedtarget]
 		jacksource = NT
-		cyuser.currentmap = jacktarget.get_cybermap(1)
+		cyuser.connect(jacktarget.get_cybermap(1))
 		cyuser.login(programstorage)
 
 		//world << "Found cybermap in [jacktarget]"
@@ -96,10 +96,11 @@
 	if(M && M.head == src && M.client)
 		M.client.update_cyberspace(cyuser)
 
-	spawn(5) .()
+	spawn(1) .()
 
 /obj/item/clothing/head/helmet/cyber/proc/toggle_off()
 	cyuser.logout()
+	cyuser.disconnect()
 	jacktarget = null
 	jacksource = null
 	lastworn = null

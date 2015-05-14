@@ -42,7 +42,7 @@ zone/proc/process()
 
 	//Check the graphic.
 
-	air.graphic = 0
+	/*air.graphic = 0
 	if(air.toxins > MOLES_PLASMA_VISIBLE)
 		air.graphic = 1
 	else if(air.trace_gases.len)
@@ -57,24 +57,28 @@ zone/proc/process()
 		if(rain && (rain.moles > 1))
 			air.graphic = 4
 		if(coolant && (coolant.moles > 1))
-			air.graphic = 5
+			air.graphic = 5*/
+
+	var/graphicchange = air.check_tile_graphic()
 
 	//Only run through the individual turfs if there's reason to.
-	if(air.graphic != air.graphic_archived || air.temperature > FIRE_MINIMUM_TEMPERATURE_TO_EXIST)
+	//if(air.graphic != air.graphic_archived || air.temperature > FIRE_MINIMUM_TEMPERATURE_TO_EXIST)
 
-		for(var/turf/simulated/S in contents)
-			//Update overlays.
-			if(air.graphic != air.graphic_archived)
-				if(S.HasDoor(1))
-					S.update_visuals()
-				else
-					S.update_visuals(air)
+	air.graphic = !air.graphic_archived
 
-			//Expose stuff to extreme heat.
-			if(air.temperature > FIRE_MINIMUM_TEMPERATURE_TO_EXIST)
-				for(var/atom/movable/item in S)
-					item.temperature_expose(air, air.temperature, CELL_VOLUME)
-				S.temperature_expose(air, air.temperature, CELL_VOLUME)
+	for(var/turf/simulated/S in contents)
+		//Update overlays.
+		if(air.graphic != air.graphic_archived)
+			if(S.HasDoor(1))
+				S.update_visuals()
+			else
+				S.update_visuals(air)
+
+		//Expose stuff to extreme heat.
+		if(air.temperature > FIRE_MINIMUM_TEMPERATURE_TO_EXIST)
+			for(var/atom/movable/item in S)
+				item.temperature_expose(air, air.temperature, CELL_VOLUME)
+			S.temperature_expose(air, air.temperature, CELL_VOLUME)
 
 	//Archive graphic so we can know if it's different.
 	air.graphic_archived = air.graphic

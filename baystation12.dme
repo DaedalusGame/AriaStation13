@@ -754,6 +754,7 @@
 #include "code\modules\cyberspace\actions.dm"
 #include "code\modules\cyberspace\ai_control.dm"
 #include "code\modules\cyberspace\cyberspace.dm"
+#include "code\modules\cyberspace\cyberuser.dm"
 #include "code\modules\cyberspace\helmet.dm"
 #include "code\modules\cyberspace\machines.dm"
 #include "code\modules\cyberspace\programs.dm"

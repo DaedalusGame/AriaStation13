@@ -63,19 +63,25 @@
 	icon_state = "grey"
 	cancolor = "grey"
 	can_label = 0
-/obj/machinery/portable_atmospherics/canister/acid
+
+/obj/machinery/portable_atmospherics/canister/reagent
+	var/reagenttype = "blood"
+
+/obj/machinery/portable_atmospherics/canister/reagent/acid
 	name = "Canister: \[ACID\]"
 	desc = "SULPHURIC ACID MOTHERFUCKER."
 	icon_state = "yellow"
 	cancolor = "yellow"
 	can_label = 0
+	reagenttype = "acid"
 
-/obj/machinery/portable_atmospherics/canister/phazon
+/obj/machinery/portable_atmospherics/canister/reagent/phazon
 	name = "Canister: \[PHAZON\]"
 	desc = "PHAZON GAS MOTHERFUCKER."
 	icon_state = "yellow"
 	cancolor = "yellow"
 	can_label = 0
+	reagenttype = "phazon"
 
 /obj/machinery/portable_atmospherics/canister/update_icon()
 	src.overlays = 0
@@ -462,19 +468,19 @@ Release Pressure: <A href='?src=\ref[src];pressure_adj=-1000'>-</A> <A href='?sr
 	src.update_icon()
 	return 1
 
-/obj/machinery/portable_atmospherics/canister/acid/New()
+/obj/machinery/portable_atmospherics/canister/reagent/New()
 
 	..()
 
 	var/datum/gas/reagent/trace_gas = new
-	trace_gas.liquid = chemical_reagents_list["acid"]
+	trace_gas.liquid = chemical_reagents_list[reagenttype]
 	air_contents.add_tracegas(trace_gas,(src.maximum_pressure*filled)*air_contents.volume/(R_IDEAL_GAS_EQUATION*air_contents.temperature))
 	air_contents.update_values()
 
 	src.update_icon()
 	return 1
 
-/obj/machinery/portable_atmospherics/canister/phazon/New()
+/*/obj/machinery/portable_atmospherics/canister/phazon/New()
 
 	..()
 
@@ -484,4 +490,4 @@ Release Pressure: <A href='?src=\ref[src];pressure_adj=-1000'>-</A> <A href='?sr
 	air_contents.update_values()
 
 	src.update_icon()
-	return 1
+	return 1*/

@@ -24,6 +24,11 @@ datum
 		volatile_fuel
 			specific_heat = 30
 
+		ionized_gas
+			specific_heat = 5
+
+			react(datum/gas_mixture/gasloc)
+
 		reagent
 			specific_heat = 35
 			var/datum/reagent/liquid = null
@@ -33,6 +38,9 @@ datum
 					return 0
 
 				var/datum/gas/reagent/r = g
+
+				if(!istype(r))
+					return 0
 
 				if(liquid == r.liquid)
 					return 1
@@ -45,7 +53,7 @@ datum
 			moles_archived = 0
 
 		proc/react(datum/gas_mixture/gasloc)
-			return
+			return 0
 
 		proc/is_tracegas(var/datum/gas/g)
 			if(g.type != type)
@@ -118,7 +126,7 @@ datum
 
 		proc/get_tracegas(var/datum/gas/g)
 			for(var/datum/gas/G in trace_gases)
-				if(G.type != g.type)
+				/*if(G.type != g.type)
 					continue
 
 				if(istype(g,/datum/gas/reagent) && istype(G,/datum/gas/reagent))
@@ -126,7 +134,10 @@ datum
 					var/datum/gas/reagent/T2 = G
 
 					if(T1.liquid != T2.liquid)
-						continue
+						continue*/
+
+				if(!G.is_tracegas(g))
+					continue
 
 				return G
 
@@ -238,7 +249,7 @@ datum
 ////////////////////////////////////////////
 
 
-		proc/check_tile_graphic()
+		/*proc/check_tile_graphic()
 			//Purpose: Calculating the graphic for a tile
 			//Called by: Turfs updating
 			//Inputs: None
@@ -269,7 +280,7 @@ datum
 				else
 					graphic = 0
 
-			return graphic != graphic_archived
+			return graphic != graphic_archived*/
 
 		proc/react(atom/dump_location)
 			//Purpose: Calculating if it is possible for a fire to occur in the airmix
@@ -282,6 +293,9 @@ datum
 			if(temperature > FIRE_MINIMUM_TEMPERATURE_TO_EXIST)
 				if(fire(null) > 0)
 					reacting = 1
+
+			for(var/datum/gas/tracegas in trace_gases)
+				reacting |= tracegas.react(src)
 
 			return reacting
 

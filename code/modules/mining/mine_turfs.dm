@@ -394,7 +394,7 @@ var/list/gasrock_chems = list("frostoil","lube","toxin","acid","pacid","thermite
 	*/
 	W.opacity = 1
 	W.ul_SetOpacity(0)
-	W.ul_Recalculate()
+	//W.ul_Recalculate()
 	W.levelupdate()
 	return W
 

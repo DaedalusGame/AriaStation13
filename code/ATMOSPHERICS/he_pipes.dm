@@ -3,6 +3,7 @@ obj/machinery/atmospherics/pipe/simple/heat_exchanging
 	icon = 'heat.dmi'
 	icon_state = "intact"
 	level = 1
+	color = "#404040"
 	var/initialize_directions_he
 
 	minimum_temperature_difference = 20

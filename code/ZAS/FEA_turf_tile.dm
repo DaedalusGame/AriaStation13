@@ -88,7 +88,7 @@ turf
 
 			super_conduct()
 
-			update_visuals()
+			/*update_visuals()
 				overlays = null
 
 				var/siding_icon_state = return_siding_icon_state()
@@ -107,7 +107,7 @@ turf
 						overlays.Add(rnmaster)
 					if(5)
 						overlays.Add(clmaster)
-
+				*/
 				/*if(!model)
 					return
 

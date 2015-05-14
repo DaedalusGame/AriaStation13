@@ -415,3 +415,12 @@ proc/ExplosionCircleFloodFill(turf/start, var/radius = 3)
 			closed += T
 
 	return closed
+
+/proc/GetRedPart(const/hexa)
+	return hex2num(copytext(hexa,2,4))
+
+/proc/GetGreenPart(const/hexa)
+	return hex2num(copytext(hexa,4,6))
+
+/proc/GetBluePart(const/hexa)
+	return hex2num(copytext(hexa,6,8))

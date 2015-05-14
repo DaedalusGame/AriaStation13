@@ -139,6 +139,19 @@ obj/effect/liquid/lava
 	var/set_temperature = 30000		// in celcius, add T0C for kelvin
 	blend_mode = BLEND_ADD
 
+	New()
+		..()
+
+		spawn(rand(10,60))
+			if(src)
+				ul_SetLuminosity(5,4,0)
+
+	Del()
+		if(LuminosityRed != 0)
+			ul_SetLuminosity(0,0,0)
+
+		..()
+
 	apply_standard_effect()
 		set background = 1
 

@@ -1,12 +1,12 @@
 // BEGIN_INTERNALS
 /*
 MAP_ICON_TYPE: 0
-WINDOW: code\modules\research\experimentor.dm;code\modules\crafting\assembler.dm;code\modules\cyberspace\cyberspace.dm;code\modules\cyberspace\programs.dm;code\modules\cyberspace\actions.dm;code\modules\cyberspace\helmet.dm;code\modules\cyberspace\machines.dm;code\modules\cyberspace\ai_control.dm;icons\mob\head.dmi
+WINDOW: code\modules\lighting\ul_interop.dm;code\modules\lighting\lighting_atom.dm;code\modules\mining\mine_turfs.dm;code\defines\obj\hydro.dm;code\game\mecha\mecha.dm;code\WorkInProgress\SkyMarshal\traitoritems.dm;icons\obj\items.dmi
 LAST_COMPILE_VERSION: 504.1234
 UPDATE_OBJ_TREE: ON
-DIR: code code\ATMOSPHERICS\components code\ATMOSPHERICS\components\binary_devices code\ATMOSPHERICS\components\unary code\defines code\defines\mob\dead code\defines\mob\living code\defines\mob\living\carbon code\defines\obj code\game code\game\machinery code\game\machinery\computer code\game\mecha code\game\mecha\combat code\game\mecha\equipment code\game\mecha\equipment\weapons code\game\objects code\game\objects\closets code\game\objects\closets\secure code\game\objects\items code\game\objects\items\weapons code\game\objects\storage code\modules code\modules\chemical code\modules\crafting code\modules\cyberspace code\modules\food code\modules\mining code\modules\misc code\modules\mob\living\silicon code\modules\mob\living\silicon\ai code\modules\network code\modules\projectiles\projectile code\modules\recycling code\modules\research code\modules\scripting\Interpreter code\modules\spacepods code\WorkInProgress code\WorkInProgress\SkyMarshal code\WorkInProgress\virus2 code\ZAS icons icons\mob interface maps sound 
-FILE: code\modules\cyberspace\cyberspace.dm
-LAST_COMPILE_TIME: 1430955827
+DIR: code code\ATMOSPHERICS\components code\ATMOSPHERICS\components\binary_devices code\ATMOSPHERICS\components\unary code\defines\mob\dead code\defines\mob\living code\defines\mob\living\carbon code\defines\obj code\game\jobs\job code\game\mecha code\game\mecha\combat code\game\mecha\equipment code\game\mecha\equipment\weapons code\game\objects\closets code\game\objects\closets\secure code\game\objects\devices code\game\objects\items code\game\objects\items\weapons code\game\objects\stacks code\game\objects\storage code\modules\mining code\modules\misc\puzzleprogram code\modules\mob\living\silicon code\modules\mob\living\silicon\ai code\modules\projectiles\projectile code\modules\scripting\Interpreter code\WorkInProgress code\WorkInProgress\SkyMarshal icons icons\effects icons\obj icons\obj\pipes interface maps sound 
+FILE: icons\obj\items.dmi
+LAST_COMPILE_TIME: 1431432752
 AUTO_FILE_DIR: ON
 */
 // END_INTERNALS
